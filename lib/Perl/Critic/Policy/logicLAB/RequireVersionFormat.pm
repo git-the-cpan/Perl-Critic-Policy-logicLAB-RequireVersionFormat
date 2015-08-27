@@ -5,17 +5,17 @@ package Perl::Critic::Policy::logicLAB::RequireVersionFormat;
 use strict;
 use warnings;
 use base
-    qw(Perl::Critic::Policy::Modules::RequireVersionVar Perl::Critic::Policy);
+  qw(Perl::Critic::Policy::Modules::RequireVersionVar Perl::Critic::Policy);
 use Perl::Critic::Utils qw{ $SEVERITY_MEDIUM :booleans };
 use List::MoreUtils qw(any);
 use Carp qw(carp croak);
 use 5.008;
 
-our $VERSION = '0.07';
+our $VERSION = '0.08';
 
 ## no critic (ValuesAndExpressions::RequireInterpolationOfMetachars)
 Readonly::Scalar my $EXPL =>
-    q{"$VERSION" variable should conform with the configured};
+  q{"$VERSION" variable should conform with the configured};
 Readonly::Scalar my $DESC => q{"$VERSION" variable not conforming};
 ## critic [ValuesAndExpressions::RequireInterpolationOfMetachars]
 use constant supported_parameters => qw(strict_quotes ignore_quotes formats);
@@ -24,15 +24,15 @@ use constant default_themes       => qw(logiclab);
 use constant applies_to           => 'PPI::Document';
 
 my @strip_tokens = qw(
-    PPI::Token::Structure
-    PPI::Token::Whitespace
+  PPI::Token::Structure
+  PPI::Token::Whitespace
 );
 
 my @parsable_tokens = qw(
-    PPI::Token::Quote::Double
-    PPI::Token::Quote::Single
-    PPI::Token::Number::Float
-    PPI::Token::Number::Version
+  PPI::Token::Quote::Double
+  PPI::Token::Quote::Single
+  PPI::Token::Number::Float
+  PPI::Token::Number::Version
 );
 
 sub violates {
@@ -41,8 +41,7 @@ sub violates {
     my $version_spec = q{};
     my $separator;
 
-    if ( my $stmt = $doc->find_first( \&_is_version_declaration_statement ) )
-    {
+    if ( my $stmt = $doc->find_first( \&_is_version_declaration_statement ) ) {
 
         my $tokenizer = PPI::Tokenizer->new( \$stmt );
         my $tokens    = $tokenizer->all_tokens;
@@ -118,7 +117,8 @@ sub _extract_version {
         if ( any { ref $t eq $_ } @parsable_tokens ) {
             if ( $t->{separator} ) {
                 return ( $t->content, $t->{separator} );
-            } else {
+            }
+            else {
                 return $t->content;
             }
         }
@@ -148,7 +148,7 @@ sub _is_vars_package_version {
     $elem->isa('PPI::Statement') || return 0;
     return any {
         $_->isa('PPI::Token::Symbol')
-            and $_->content =~ m{ \A \$(\S+::)*VERSION \z }xms;
+          and $_->content =~ m{ \A \$(\S+::)*VERSION \z }xms;
     }
     $elem->children();
 }
@@ -158,6 +158,14 @@ sub _is_vars_package_version {
 __END__
 
 =pod
+
+=begin markdown
+
+[![CPAN version](https://badge.fury.io/pl/Perl-Critic-Policy-logicLAB-RequireVersionFormat.svg)](http://badge.fury.io/pl/Perl-Critic-Policy-logicLAB-RequireVersionFormat)
+[![Build Status](https://travis-ci.org/jonasbn/pcpmrvf.svg?branch=master)](https://travis-ci.org/jonasbn/pcpmrvf)
+[![Coverage Status](https://coveralls.io/repos/jonasbn/pcpmrvf/badge.png)](https://coveralls.io/r/jonasbn/pcpmrvf)
+
+=end markdown
 
 =head1 NAME
 
@@ -352,7 +360,7 @@ The following policies have been disabled for this distribution
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright (c) 2009-2014 Jonas B. Nielsen. All rights reserved.
+Copyright (c) 2009-2015 Jonas B. Nielsen. All rights reserved.
 
 This program is free software; you can redistribute it and/or modify it under the same terms as Perl itself.
 
